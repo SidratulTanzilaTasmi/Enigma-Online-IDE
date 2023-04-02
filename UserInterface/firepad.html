@@ -1,0 +1,254 @@
+<!doctype html>
+<!-- See http://www.firepad.io/docs/ for detailed embedding docs. -->
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Enigma</title>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase.js"></script>
+  <!-- ACE and its JavaScript mode and theme files -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/mode-javascript.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/theme-textmate.js"></script>
+
+  <!-- Firepad -->
+  <link rel="stylesheet" href="https://firepad.io/releases/v1.5.9/firepad.css" />
+  <script src="https://firepad.io/releases/v1.5.9/firepad.min.js"></script>
+
+  <style>
+    html {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      height: 70%;
+      position: relative;
+      font-size: 25;
+    }
+
+    /* Height / width / positioning can be customized for your use case.
+       For demo purposes, we make firepad fill the entire browser. */
+    #firepad-container {
+      width: 100%;
+      height: 100%;
+      font-size: 18px;
+    }
+
+    .control-panel {
+      background: lightgray;
+      text-align: right;
+      font-size: 18px;
+      padding: 4px;
+      font-family: sans-serif;
+      font-weight: bold;
+    }
+
+    .button-container {
+      text-align: right;
+      padding: 4px;
+    }
+
+    .btn {
+      background: #57a958;
+      color: white;
+      padding: 8px;
+      border: 0;
+    }
+
+    .output {
+      padding: 4px;
+      border: 2px solid gray;
+      min-height: 100px;
+      width: 99%;
+      resize: none;
+      font-size: 18;
+      font-family: sans-serif;
+
+    }
+
+    .title {
+      background: linear-gradient(purple, indigo);
+      text-align: left;
+      font-size: 30px;
+      font-weight: bold;
+      color: white;
+      padding: 4px;
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<div class="title">Enigma IDE</div>
+
+
+
+<div class="control-panel">
+  Select Language:
+  &nbsp; &nbsp;
+  <select id="languages" class="languages" onchange="changeLanguage()">
+    <option value="c"> C </option>
+    <option value="cpp"> C++ </option>
+    <option value="php"> PHP </option>
+    <option value="python"> Python </option>
+    <option value="node"> Node JS </option>
+  </select>
+  Select Theme:
+  <select id="Theme" class="Theme" onchange="changeTheme()">
+    <option value="Monokai">Monokai</option>
+    <option value="Crimson Editor">Crimson Editor</option>
+    <option value="Pastel On Dark">Pastel On Dark</option>
+    <option value="Dawn">Dawn</option>
+    <option value="Ambience">Ambience</option>
+    <option value="Cobalt">Cobalt</option>
+    <option value="Cloud Midnight">Cloud Midnight</option>
+    <option value="Dracula">Dracula</option>
+    <option value="Github">GitHub</option>
+    <option value="Eclipse">Eclipse</option>
+    <option value="Dream Weaver">Dream Weaver</option>
+
+    <option value="One Dark">One Dark</option>
+    <option value="Nord Dark">Nork Dark</option>
+    <option value="Solarized Dark">Solarized Dark</option>
+    <option value="Solarized Light">Solarized Light</option>
+    <option value="Terminal">Terminal</option>
+    <option value="Twilight">Twilight</option>
+    <option value="Vibrant Ink">Vibrant Ink</option>
+    <opton value="SQL Server">SQL Server</opton>
+    <option value="Idle Fingers">Idle Fingers</option>
+    <option value="Tomorrow Night">Tomorrow Night</option>
+
+  </select>
+
+  Font Size:
+  <select id="Font" class="Font" onchange="changeFont()">
+    <option value=11>11</option>
+    <option value=18>18</option>
+  </select>
+</div>
+
+<body onload="init()">
+
+  <div id="firepad-container"></div>
+  <div class="output">
+
+
+    <button class="btn" onclick="myFunction()">Run</button>
+
+    <p id="demo"></p>
+
+
+
+    <script>
+      function myFunction() {
+        document.getElementById("demo").innerHTML = "Hello World!";
+      }
+    </script>
+    <script>
+      function init() {
+        //// Initialize Firebase.
+        //// TODO: replace with your Firebase project configuration.
+        var config = {
+          apiKey: '<API_KEY>',
+          authDomain: "firepad-gh-tests.firebaseapp.com",
+          databaseURL: "https://firepad-gh-tests.firebaseio.com"
+        };
+        firebase.initializeApp(config);
+
+        //// Get Firebase Database reference.
+        var firepadRef = getExampleRef();
+
+        //// Create ACE
+        var editor = ace.edit("firepad-container");
+        editor.setTheme("ace/theme/monokai");
+        var session = editor.getSession();
+        session.setUseWrapMode(true);
+        session.setUseWorker(false);
+        session.setMode("ace/mode/c_cpp");
+
+
+        //// Create Firepad.
+        var firepad = Firepad.fromACE(firepadRef, editor, {
+          defaultText: '// JavaScript Editing with Firepad!\nfunction go() {\n  var message = "Hello, world.";\n  console.log(message);\n}'
+        });
+      }
+
+
+
+      function changeTheme() {
+        let theme = $("#Theme").val();
+        if (theme == 'Crimson Editor') {
+
+          var editor = ace.edit("firepad-container");
+          editor.setTheme("ace/theme/crimson_editor");
+          var session = editor.getSession();
+          session.setUseWrapMode(true);
+          session.setUseWorker(false);
+          session.setMode("ace/mode/c_cpp");
+
+        }
+        else if (theme == 'Pastel On dark') editor.setTheme("ace/theme/pastel_on_dark");
+        else if (theme == 'Dawn') editor.setTheme("ace/theme/dawn");
+        else if (theme == 'Ambience') editor.setTheme("ace/theme/ambiance");
+        else if (theme == 'Cobalt') editor.setTheme("ace/theme/cobalt");
+        else if (theme == 'Cloud Midnight') editor.setTheme("ace/theme/clouds_midnight");
+        else if (theme == 'Dracula') editor.setTheme("ace/theme/dracula");
+        else if (theme == 'Github') session.setTheme("ace/theme/github");
+        else if (theme == 'Eclipse') editor.setTheme("ace/theme/eclipse");
+        else if (theme == 'Monokai') editor.setTheme("ace/theme/dreamweaver");
+        else if (theme == 'One Dark') editor.setTheme("ace/theme/one_dark");
+        else if (theme == 'Nord Dark') editor.setTheme("ace/theme/nord_dark");
+        else if (theme == 'Solarized Dark') editor.setTheme("ace/theme/solarized_dark");
+        else if (theme == 'Solarized Light') editor.setTheme("ace/theme/solarized_light");
+        else if (theme == 'Terminal') editor.setTheme("ace/theme/terminal");
+        else if (theme == 'Twilight') editor.setTheme("ace/theme/twilight");
+        else if (theme == 'Vibrant Ink') editor.setTheme("ace/theme/vibrant_ink");
+        else if (theme == 'SQL Server') editor.setTheme("ace/theme/sqlserver");
+        else if (theme == 'Idle Fingers') editor.setTheme("ace/theme/idle_fingers");
+        else if (theme == 'Tomorrow Night') editor.setTheme("ace/theme/tomorrow_night");
+
+
+      }
+
+
+
+
+
+      // Helper to get hash from end of URL or generate a random one.
+      function getExampleRef() {
+        var ref = firebase.database().ref();
+        var hash = window.location.hash.replace(/#/g, '');
+        if (hash) {
+          ref = ref.child(hash);
+        } else {
+          ref = ref.push(); // generate unique location.
+          window.location = window.location + '#' + ref.key; // add it as a hash to the URL.
+        }
+        if (typeof console !== 'undefined') {
+          console.log('Firebase data: ', ref.toString());
+        }
+        return ref;
+      }
+
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.9/firebase-app.js';
+      import { getDatabase, set, ref, update } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAUw4ICrEj4Nx37SO2PBXr6U4ckWaRpYhg",
+        authDomain: "enigma-8f910.firebaseapp.com",
+        databaseURL: "https://enigma-8f910-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "enigma-8f910",
+        storageBucket: "enigma-8f910.appspot.com",
+        messagingSenderId: "967375021980",
+        appId: "1:967375021980:web:ec892923267151a87e0a59",
+        measurementId: "G-72G2KK4V8X"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const database = getDatabase()
+
+    </script>
+</body>
+
+</html>
